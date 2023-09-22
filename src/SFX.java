@@ -2,8 +2,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
@@ -18,7 +16,7 @@ public class SFX {
     private static Map<String, Clip> clipMap = new HashMap<>();
     private static float volume = 0.5f; // Default volume
 
-    public SFX() {
+    private SFX() {
         // Display a more formal error message for creating an instance of SFX
         JOptionPane.showMessageDialog(
                 null,

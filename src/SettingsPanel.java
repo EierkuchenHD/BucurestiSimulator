@@ -35,6 +35,8 @@ public class SettingsPanel extends JPanel {
             public void stateChanged(ChangeEvent e) {
                 int volume = bgmVolumeSlider.getValue();
                 preferences.putInt("bgmVolume", volume);
+                float normalizedVolume = (float) volume / 100.0f;
+                BGM.setVolume(normalizedVolume); // Update BGM volume immediately
             }
         });
 
@@ -47,7 +49,7 @@ public class SettingsPanel extends JPanel {
                 int volume = sfxVolumeSlider.getValue();
                 preferences.putInt("sfxVolume", volume);
                 float normalizedVolume = (float) volume / 100.0f;
-                SFX.setVolume(normalizedVolume); // Call the static method
+                SFX.setVolume(normalizedVolume); // Adjust SFX volume
             }
         });
 

@@ -36,6 +36,8 @@ public class MainMenu extends JFrame {
         initKeyBindings();
         initCardPanel();
 
+        BGM.playMainMenuBackgroundMusic();
+
         setVisible(true);
     }
 
@@ -52,43 +54,32 @@ public class MainMenu extends JFrame {
         JButton creditsButton = createButton("Credits", 180, 70); // Adjusted size
         JButton quitButton = createButton("Quit", 180, 70); // Adjusted size
 
-        playButton.addActionListener(e -> {
-            SFX.playButtonClickSound(); // Play button click sound
-            showPlayPanel();
-        });
-
-        settingsButton.addActionListener(e -> {
-            SFX.playButtonClickSound(); // Play button click sound
-            showSettingsPanel();
-        });
-
-        creditsButton.addActionListener(e -> {
-            SFX.playButtonClickSound(); // Play button click sound
-            cardLayout.show(cardPanel, "credits");
-        });
-
-        quitButton.addActionListener(e -> {
-            SFX.playButtonClickSound(); // Play button click sound
-            System.exit(0);
-        });
+        playButton.addActionListener(e -> handleButtonClick("play"));
+        settingsButton.addActionListener(e -> handleButtonClick("settings"));
+        creditsButton.addActionListener(e -> handleButtonClick("credits"));
+        quitButton.addActionListener(e -> handleButtonClick("quit"));
 
         // Create a panel for buttons with GridBagLayout
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10); // Padding
 
-        // Add buttons to the button panel
+        // Add the "BUCURESTI SIMULATOR" text above the buttons
+        JLabel titleLabel = createTitleLabel("BUCURESTI SIMULATOR");
         gbc.gridx = 0;
         gbc.gridy = 0;
-        buttonPanel.add(playButton, gbc);
+        buttonPanel.add(titleLabel, gbc);
 
         gbc.gridy = 1;
-        buttonPanel.add(settingsButton, gbc);
+        buttonPanel.add(playButton, gbc);
 
         gbc.gridy = 2;
-        buttonPanel.add(creditsButton, gbc);
+        buttonPanel.add(settingsButton, gbc);
 
         gbc.gridy = 3;
+        buttonPanel.add(creditsButton, gbc);
+
+        gbc.gridy = 4;
         buttonPanel.add(quitButton, gbc);
 
         cardPanel.add(buttonPanel, "menu");
@@ -100,6 +91,13 @@ public class MainMenu extends JFrame {
         button.setPreferredSize(new Dimension(width, height));
         button.setMinimumSize(new Dimension(width, height));
         return button;
+    }
+
+    private JLabel createTitleLabel(String text) {
+        JLabel titleLabel = new JLabel(text);
+        titleLabel.setFont(new Font("Consolas", Font.BOLD, 36));
+        titleLabel.setForeground(Color.RED); // Set text color to white
+        return titleLabel;
     }
 
     private void initKeyBindings() {
@@ -133,6 +131,25 @@ public class MainMenu extends JFrame {
         add(cardPanel);
     }
 
+    // Handle button click actions
+    private void handleButtonClick(String action) {
+        SFX.playButtonClickSound(); // Play button click sound
+        switch (action) {
+            case "play":
+                showPlayPanel();
+                break;
+            case "settings":
+                showSettingsPanel();
+                break;
+            case "credits":
+                cardLayout.show(cardPanel, "credits");
+                break;
+            case "quit":
+                System.exit(0);
+                break;
+        }
+    }
+
     // Method to show the play panel
     private void showPlayPanel() {
         PlayPanel playPanel = new PlayPanel(); // Create an instance of PlayPanel
@@ -143,5 +160,11 @@ public class MainMenu extends JFrame {
     // Method to show the settings panel
     private void showSettingsPanel() {
         cardLayout.show(cardPanel, "settings");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new MainMenu();
+        });
     }
 }
