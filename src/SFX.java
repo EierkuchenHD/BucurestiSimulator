@@ -4,12 +4,19 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SFX {
     private static Clip clip;
+    private static Map<String, Clip> clipMap = new HashMap<>();
+    private static float volume = 0.5f; // Default volume
 
     public SFX() {
         // Display a more formal error message for creating an instance of SFX
@@ -25,32 +32,27 @@ public class SFX {
     }
 
     // Play the sound effect from a file path
-    private static void play(String filePath) {
+    private static void play(String filename) {
         try {
-            File soundFile = new File(filePath);
+            if (clipMap.containsKey(filename)) {
+                Clip clip = clipMap.get(filename);
+                clip.setFramePosition(0);
+            } else {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clipMap.put(filename, clip);
+            }
 
-            // Create an audio input stream
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = clipMap.get(filename);
+            clip.setFramePosition(0);
 
-            // Get a clip to play the sound
-            clip = AudioSystem.getClip();
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
 
-            // Open the audio input stream with the clip
-            clip.open(audioInputStream);
-
-            // Add a listener to handle sound events (e.g., when the sound finishes playing)
-            clip.addLineListener(new LineListener() {
-                @Override
-                public void update(LineEvent event) {
-                    if (event.getType() == LineEvent.Type.STOP) {
-                        clip.close();
-                    }
-                }
-            });
-
-            // Play the sound effect
             clip.start();
-        } catch (Exception e) {
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
@@ -64,10 +66,15 @@ public class SFX {
 
     // Set the volume of the currently playing sound effect (0.0f to 1.0f)
     public static void setVolume(float volume) {
-        if (clip != null) {
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            gainControl.setValue(dB);
+        if (volume >= 0.0f && volume <= 1.0f) {
+            SFX.volume = volume;
+            for (Clip clip : clipMap.values()) {
+                if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                    float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+                    gainControl.setValue(dB);
+                }
+            }
         }
     }
 
