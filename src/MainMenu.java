@@ -7,7 +7,7 @@ public class MainMenu extends JFrame {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private SettingsPanel settingsPanel;
-    private boolean isFullscreen = false; // Track the fullscreen state
+    private boolean isFullscreen = false;
 
     public MainMenu() {
         try {

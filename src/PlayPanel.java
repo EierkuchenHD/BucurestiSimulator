@@ -9,21 +9,17 @@ public class PlayPanel extends JPanel {
     public PlayPanel() {
         setLayout(new BorderLayout());
 
-        // Create a panel for the top left corner
-        JPanel topLeftPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcLeft = new GridBagConstraints();
-        gbcLeft.insets = new Insets(5, 10, 5, 10); // Padding
+        // Create a panel for the top left corner with FlowLayout
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         timeLeftLabel = new JLabel("Time Left: 0");
         timeLeftLabel.setFont(new Font("Consolas", Font.BOLD, 24));
-        topLeftPanel.add(timeLeftLabel, gbcLeft);
+        topLeftPanel.add(timeLeftLabel);
 
-        // Create a panel for the top right corner
-        JPanel topRightPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcRight = new GridBagConstraints();
-        gbcRight.insets = new Insets(5, 10, 5, 10); // Padding
+        // Create a panel for the top right corner with FlowLayout
+        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         robberiesLabel = new JLabel("Robberies: 0");
         robberiesLabel.setFont(new Font("Consolas", Font.BOLD, 24));
-        topRightPanel.add(robberiesLabel, gbcRight);
+        topRightPanel.add(robberiesLabel);
 
         // Add the top left and top right panels to the main panel
         add(topLeftPanel, BorderLayout.WEST);
