@@ -90,14 +90,13 @@ public class MainMenu extends JFrame {
         JButton button = new JButton(text);
         button.setFont(new Font("Consolas", Font.BOLD, 24));
         button.setPreferredSize(new Dimension(width, height));
-        button.setMinimumSize(new Dimension(width, height));
         return button;
     }
 
     private JLabel createTitleLabel(String text) {
         JLabel titleLabel = new JLabel(text);
         titleLabel.setFont(new Font("Consolas", Font.BOLD, 36));
-        titleLabel.setForeground(Color.RED); // Set text color to white
+        titleLabel.setForeground(Color.RED); // Set text color to red
         return titleLabel;
     }
 
@@ -125,7 +124,7 @@ public class MainMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Toggle fullscreen mode
-                setFullscreen(!isFullscreen());
+                setFullscreen(!isFullscreen);
             }
         };
 
@@ -152,10 +151,6 @@ public class MainMenu extends JFrame {
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "showMainMenu");
         getRootPane().getActionMap().put("showMainMenu", showMainMenuAction);
-    }
-
-    private boolean isFullscreen() {
-        return (getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
     }
 
     private void setFullscreen(boolean fullscreen) {
@@ -227,11 +222,5 @@ public class MainMenu extends JFrame {
     // Method to show the settings panel
     private void showSettingsPanel() {
         cardLayout.show(cardPanel, "settings");
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new MainMenu();
-        });
     }
 }
