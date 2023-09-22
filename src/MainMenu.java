@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class MainMenu extends JFrame {
 
@@ -9,12 +10,16 @@ public class MainMenu extends JFrame {
     private SettingsPanel settingsPanel;
     private boolean isFullscreen = false;
 
+    // Constants for button dimensions
+    private static final int BUTTON_WIDTH = 180;
+    private static final int BUTTON_HEIGHT = 70;
+
     public MainMenu() {
         try {
-            // Set the system look and feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error setting look and feel: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         // Set custom icon
@@ -43,17 +48,23 @@ public class MainMenu extends JFrame {
     }
 
     private void setCustomIcon() {
-        ImageIcon icon = new ImageIcon("images/fiend.png");
-        Image iconImage = icon.getImage();
-        setIconImage(iconImage);
+        File iconFile = new File("images/fiend.png");
+        if (iconFile.exists()) {
+            ImageIcon icon = new ImageIcon(iconFile.getAbsolutePath());
+            Image iconImage = icon.getImage();
+            setIconImage(iconImage);
+        } else {
+            JOptionPane.showMessageDialog(null, "Icon file not found.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void initButtons() {
         // Create buttons with specific sizes
-        JButton playButton = createButton("Play", 180, 70); // Adjusted size
-        JButton settingsButton = createButton("Settings", 180, 70); // Adjusted size
-        JButton creditsButton = createButton("Credits", 180, 70); // Adjusted size
-        JButton quitButton = createButton("Quit", 180, 70); // Adjusted size
+        JButton playButton = createButton("Play"); // Adjusted size
+        JButton settingsButton = createButton("Settings"); // Adjusted size
+        JButton creditsButton = createButton("Credits"); // Adjusted size
+        JButton quitButton = createButton("Quit"); // Adjusted size
 
         playButton.addActionListener(e -> handleButtonClick("play"));
         settingsButton.addActionListener(e -> handleButtonClick("settings"));
@@ -86,10 +97,11 @@ public class MainMenu extends JFrame {
         cardPanel.add(buttonPanel, "menu");
     }
 
-    private JButton createButton(String text, int width, int height) {
+    // Use constants in createButton method
+    private JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Consolas", Font.BOLD, 24));
-        button.setPreferredSize(new Dimension(width, height));
+        button.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         return button;
     }
 
@@ -114,8 +126,12 @@ public class MainMenu extends JFrame {
                 // Toggle BGM mute state
                 if (BGM.isMuted()) {
                     BGM.unmute();
+                    JOptionPane.showMessageDialog(null, "Background music unmuted.", "Sound",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     BGM.mute();
+                    JOptionPane.showMessageDialog(null, "Background music muted.", "Sound",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         };
@@ -173,6 +189,8 @@ public class MainMenu extends JFrame {
                 setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the window
                 setVisible(true);
                 isFullscreen = true;
+                JOptionPane.showMessageDialog(null, "Switched to Fullscreen Mode.", "Fullscreen",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
             if (isFullscreen) {
@@ -183,6 +201,8 @@ public class MainMenu extends JFrame {
                 setLocationRelativeTo(null); // Center the frame
                 setVisible(true);
                 isFullscreen = false;
+                JOptionPane.showMessageDialog(null, "Switched to Windowed Mode.", "Fullscreen",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
@@ -238,5 +258,4 @@ public class MainMenu extends JFrame {
         BGM.stop(); // Stop the current music
         cardLayout.show(cardPanel, "settings");
     }
-
 }
