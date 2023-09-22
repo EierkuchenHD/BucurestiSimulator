@@ -7,6 +7,7 @@ public class MainMenu extends JFrame {
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private SettingsPanel settingsPanel;
+    private boolean isFullscreen = false; // Track the fullscreen state
 
     public MainMenu() {
         try {
@@ -108,9 +109,75 @@ public class MainMenu extends JFrame {
             }
         };
 
+        Action muteBGMAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Toggle BGM mute state
+                if (BGM.isMuted()) {
+                    BGM.unmute();
+                } else {
+                    BGM.mute();
+                }
+            }
+        };
+
+        Action toggleFullscreenAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Toggle fullscreen mode
+                setFullscreen(!isFullscreen());
+            }
+        };
+
+        Action playSecretSoundAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SFX.playSecretSound();
+            }
+        };
+
+        // Add key bindings for M, F11, and P
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_M, 0), "muteBGM");
+        getRootPane().getActionMap().put("muteBGM", muteBGMAction);
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "toggleFullscreen");
+        getRootPane().getActionMap().put("toggleFullscreen", toggleFullscreenAction);
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "playSecretSound");
+        getRootPane().getActionMap().put("playSecretSound", playSecretSoundAction);
+
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "showMainMenu");
         getRootPane().getActionMap().put("showMainMenu", showMainMenuAction);
+    }
+
+    private boolean isFullscreen() {
+        return (getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
+    }
+
+    private void setFullscreen(boolean fullscreen) {
+        if (fullscreen) {
+            if (!isFullscreen) {
+                dispose(); // Dispose of the current frame
+                setUndecorated(true); // Make it borderless
+                setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the window
+                setVisible(true);
+                isFullscreen = true;
+            }
+        } else {
+            if (isFullscreen) {
+                dispose(); // Dispose of the current frame
+                setUndecorated(false); // Make it decorated (with borders)
+                setExtendedState(JFrame.NORMAL); // Restore normal state
+                pack(); // Pack the frame to preferred size
+                setLocationRelativeTo(null); // Center the frame
+                setVisible(true);
+                isFullscreen = false;
+            }
+        }
     }
 
     private void initCardPanel() {

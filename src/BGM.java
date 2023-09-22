@@ -11,6 +11,7 @@ public class BGM {
     private static Clip clip;
     private static float volume = 0.5f; // Default volume
     private static Map<String, Clip> clipMap = new HashMap<>();
+    private static boolean isMuted = false; // New variable to track mute state
 
     private BGM() {
         JOptionPane.showMessageDialog(
@@ -49,10 +50,22 @@ public class BGM {
         }
     }
 
-    public static void stop() {
+    public static void mute() {
         if (clip != null && clip.isRunning()) {
             clip.stop();
+            isMuted = true;
         }
+    }
+
+    public static void unmute() {
+        if (clip != null && !clip.isRunning() && isMuted) {
+            clip.start();
+            isMuted = false;
+        }
+    }
+
+    public static boolean isMuted() {
+        return isMuted;
     }
 
     public static void setVolume(int percentage) {
@@ -65,9 +78,5 @@ public class BGM {
                 gainControl.setValue(dB);
             }
         }
-    }
-
-    public static boolean isPlaying() {
-        return clip != null && clip.isRunning();
     }
 }
