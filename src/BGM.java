@@ -55,15 +55,14 @@ public class BGM {
         }
     }
 
-    public static void setVolume(float volume) {
-        if (volume >= 0.0f && volume <= 1.0f) {
+    public static void setVolume(int percentage) {
+        if (percentage >= 0 && percentage <= 100) {
+            float volume = percentage / 100.0f; // Convert percentage to a float value between 0 and 1
             BGM.volume = volume;
-            for (Clip clip : clipMap.values()) {
-                if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                    float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-                    gainControl.setValue(dB);
-                }
+            if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+                gainControl.setValue(dB);
             }
         }
     }
