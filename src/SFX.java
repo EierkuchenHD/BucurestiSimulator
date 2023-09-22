@@ -29,6 +29,10 @@ public class SFX {
         play("sounds/preview.wav");
     }
 
+    public static void playSecretSound() {
+        play("sounds/secret.wav");
+    }
+
     // Play the sound effect from a file path
     private static void play(String filename) {
         try {

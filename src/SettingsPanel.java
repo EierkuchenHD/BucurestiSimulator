@@ -56,6 +56,10 @@ public class SettingsPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Play button click sound
+                SFX.playButtonClickSound();
+
+                // Handle navigation to the previous panel
                 CardLayout cardLayout = (CardLayout) getParent().getLayout();
                 cardLayout.show(getParent(), "menu"); // Assuming "menu" is the name of the previous panel
             }
@@ -66,8 +70,12 @@ public class SettingsPanel extends JPanel {
         restoreDefaultsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle restore defaults button click, e.g., reset settings to default values
-                // You can define the behavior based on your application's default settings
+                // Reset sliders to default value (50)
+                bgmVolumeSlider.setValue(50);
+                sfxVolumeSlider.setValue(50);
+
+                // Play button click sound
+                SFX.playButtonClickSound();
             }
         });
 
