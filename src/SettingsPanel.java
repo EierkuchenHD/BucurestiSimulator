@@ -13,7 +13,6 @@ public class SettingsPanel extends JPanel {
     private JSlider bgmVolumeSlider;
     private JSlider sfxVolumeSlider;
     private JComboBox<String> resolutionComboBox;
-
     private Preferences preferences;
 
     public SettingsPanel() {
@@ -47,6 +46,8 @@ public class SettingsPanel extends JPanel {
             public void stateChanged(ChangeEvent e) {
                 int volume = sfxVolumeSlider.getValue();
                 preferences.putInt("sfxVolume", volume);
+                float normalizedVolume = (float) volume / 100.0f;
+                SFX.setVolume(normalizedVolume); // Call the static method
             }
         });
 

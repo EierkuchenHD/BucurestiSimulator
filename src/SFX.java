@@ -4,17 +4,28 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
+import javax.swing.JOptionPane;
+
 import java.io.File;
 
 public class SFX {
     private static Clip clip;
 
-    private SFX() {
-        // Private constructor to prevent instantiation
+    public SFX() {
+        // Display a more formal error message for creating an instance of SFX
+        JOptionPane.showMessageDialog(
+                null,
+                "Error: An instance of the SFX class was created, which should not occur.\nPlease use the static methods for audio operations.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void playButtonClickSound() {
+        play("sounds/preview.wav");
     }
 
     // Play the sound effect from a file path
-    public static void play(String filePath) {
+    private static void play(String filePath) {
         try {
             File soundFile = new File(filePath);
 

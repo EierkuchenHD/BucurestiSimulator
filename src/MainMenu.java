@@ -52,10 +52,25 @@ public class MainMenu extends JFrame {
         JButton creditsButton = createButton("Credits", 180, 70); // Adjusted size
         JButton quitButton = createButton("Quit", 180, 70); // Adjusted size
 
-        playButton.addActionListener(e -> showPlayPanel());
-        settingsButton.addActionListener(e -> showSettingsPanel());
-        creditsButton.addActionListener(e -> cardLayout.show(cardPanel, "credits"));
-        quitButton.addActionListener(e -> System.exit(0));
+        playButton.addActionListener(e -> {
+            SFX.playButtonClickSound(); // Play button click sound
+            showPlayPanel();
+        });
+
+        settingsButton.addActionListener(e -> {
+            SFX.playButtonClickSound(); // Play button click sound
+            showSettingsPanel();
+        });
+
+        creditsButton.addActionListener(e -> {
+            SFX.playButtonClickSound(); // Play button click sound
+            cardLayout.show(cardPanel, "credits");
+        });
+
+        quitButton.addActionListener(e -> {
+            SFX.playButtonClickSound(); // Play button click sound
+            System.exit(0);
+        });
 
         // Create a panel for buttons with GridBagLayout
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -77,7 +92,6 @@ public class MainMenu extends JFrame {
         buttonPanel.add(quitButton, gbc);
 
         cardPanel.add(buttonPanel, "menu");
-
     }
 
     private JButton createButton(String text, int width, int height) {
