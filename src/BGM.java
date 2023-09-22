@@ -25,6 +25,10 @@ public class BGM {
         BGM.play("music/speaker_city.wav");
     }
 
+    public static void playPlayPanelMusic() {
+        BGM.play("music/casa_dan_deal.wav");
+    }
+
     public static void play(String filename) {
         try {
             if (clipMap.containsKey(filename)) {
@@ -47,6 +51,14 @@ public class BGM {
             clip.start();
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void stop() {
+        if (clip != null) {
+            clip.stop();
+            clip.close(); // Release the resources
+            clip = null; // Set the clip to null
         }
     }
 

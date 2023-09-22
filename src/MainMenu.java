@@ -151,6 +151,18 @@ public class MainMenu extends JFrame {
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "showMainMenu");
         getRootPane().getActionMap().put("showMainMenu", showMainMenuAction);
+
+        // Add key binding for Escape key while in PlayPanel
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "backToMainMenu");
+        getRootPane().getActionMap().put("backToMainMenu", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "menu"); // Show the main menu
+                BGM.stop(); // Stop the BGM
+                BGM.playMainMenuBackgroundMusic(); // Play main menu background music
+            }
+        });
     }
 
     private void setFullscreen(boolean fullscreen) {
@@ -214,13 +226,17 @@ public class MainMenu extends JFrame {
 
     // Method to show the play panel
     private void showPlayPanel() {
+        BGM.stop(); // Stop the current music
         PlayPanel playPanel = new PlayPanel(); // Create an instance of PlayPanel
         cardPanel.add(playPanel, "playpanel"); // Add it to the card panel
         cardLayout.show(cardPanel, "playpanel"); // Show the play panel
+        BGM.playPlayPanelMusic(); // Play play panel music
     }
 
     // Method to show the settings panel
     private void showSettingsPanel() {
+        BGM.stop(); // Stop the current music
         cardLayout.show(cardPanel, "settings");
     }
+
 }
