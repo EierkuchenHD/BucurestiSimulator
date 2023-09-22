@@ -105,7 +105,7 @@ public class SettingsPanel extends JPanel {
     }
 
     private JComboBox<String> createResolutionComboBox() {
-        String[] resolutions = { "640x480", "1280x720", "1920x1080" };
+        String[] resolutions = { "854x480", "1280x720", "1920x1080" };
         JComboBox<String> comboBox = new JComboBox<>(resolutions);
         comboBox.setFont(new Font("Consolas", Font.BOLD, 24));
         comboBox.setPreferredSize(new Dimension(180, 70));
