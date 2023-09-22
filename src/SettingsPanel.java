@@ -2,12 +2,16 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
 
 public class SettingsPanel extends JPanel {
 
     private JSlider bgmVolumeSlider;
     private JSlider sfxVolumeSlider;
+    private JButton backButton; // Added "Back" button
+    private JButton restoreDefaultsButton; // Added "Restore Default Settings" button
     private Preferences preferences;
 
     public SettingsPanel() {
@@ -47,6 +51,26 @@ public class SettingsPanel extends JPanel {
             }
         });
 
+        // Added "Back" button
+        backButton = createButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout cardLayout = (CardLayout) getParent().getLayout();
+                cardLayout.show(getParent(), "menu"); // Assuming "menu" is the name of the previous panel
+            }
+        });
+
+        // Added "Restore Default Settings" button
+        restoreDefaultsButton = createButton("Restore Default Settings");
+        restoreDefaultsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Handle restore defaults button click, e.g., reset settings to default values
+                // You can define the behavior based on your application's default settings
+            }
+        });
+
         add(bgmVolumeLabel, gbc);
         gbc.gridy++;
         add(bgmVolumeSlider, gbc);
@@ -54,6 +78,10 @@ public class SettingsPanel extends JPanel {
         add(sfxVolumeLabel, gbc);
         gbc.gridy++;
         add(sfxVolumeSlider, gbc);
+        gbc.gridy++;
+        add(backButton, gbc); // "Back" button
+        gbc.gridy++;
+        add(restoreDefaultsButton, gbc); // "Restore Default Settings" button
     }
 
     private JSlider createSlider(int min, int max, int value) {
@@ -71,6 +99,12 @@ public class SettingsPanel extends JPanel {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Consolas", Font.BOLD, 24));
         return label;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Consolas", Font.BOLD, 24));
+        return button;
     }
 
     public void loadSettings() {
