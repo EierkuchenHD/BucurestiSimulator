@@ -51,7 +51,6 @@ public class SettingsPanel extends JPanel {
         });
 
         JLabel resolutionLabel = createLabel("Screen Resolution:");
-        String[] resolutions = { "1280x720", "1920x1080", "2560x1440" }; // ! Fix this shit
         resolutionComboBox = createResolutionComboBox();
         resolutionComboBox.setSelectedItem(preferences.get("resolution", "1280x720"));
         resolutionComboBox.addActionListener(new ActionListener() {
@@ -103,7 +102,7 @@ public class SettingsPanel extends JPanel {
     }
 
     private JComboBox<String> createResolutionComboBox() {
-        String[] resolutions = { "1280x720", "1920x1080", "2560x1440" };
+        String[] resolutions = { "640x480", "1280x720", "1920x1080" };
         JComboBox<String> comboBox = new JComboBox<>(resolutions);
         comboBox.setFont(new Font("Consolas", Font.BOLD, 24));
         comboBox.setPreferredSize(new Dimension(180, 70));
