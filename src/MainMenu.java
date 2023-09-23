@@ -175,7 +175,6 @@ public class MainMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "menu"); // Show the main menu
-                BGM.stop(); // Stop the BGM
                 BGM.playMainMenuBackgroundMusic(); // Play main menu background music
             }
         });
@@ -246,7 +245,6 @@ public class MainMenu extends JFrame {
 
     // Method to show the play panel
     private void showPlayPanel() {
-        BGM.stop(); // Stop the current music
         PlayPanel playPanel = new PlayPanel(); // Create an instance of PlayPanel
         cardPanel.add(playPanel, "playpanel"); // Add it to the card panel
         cardLayout.show(cardPanel, "playpanel"); // Show the play panel
@@ -255,7 +253,6 @@ public class MainMenu extends JFrame {
 
     // Method to show the settings panel
     private void showSettingsPanel() {
-        BGM.stop(); // Stop the current music
         cardLayout.show(cardPanel, "settings");
     }
 }
