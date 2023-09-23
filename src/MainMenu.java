@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.prefs.Preferences;
 
 public class MainMenu extends JFrame {
 
@@ -18,8 +19,10 @@ public class MainMenu extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error setting look and feel: " + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            // Display a detailed error message if an exception occurs
+            String errorMessage = "An error occurred while setting the look and feel:\n" + e.getMessage();
+            JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Print the stack trace for debugging purposes
         }
 
         // Set custom icon
