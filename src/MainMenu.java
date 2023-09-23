@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.prefs.Preferences;
 
 public class MainMenu extends JFrame {
 
@@ -170,17 +169,6 @@ public class MainMenu extends JFrame {
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "showMainMenu");
         getRootPane().getActionMap().put("showMainMenu", showMainMenuAction);
-
-        // Add key binding for Escape key while in PlayPanel
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "backToMainMenu");
-        getRootPane().getActionMap().put("backToMainMenu", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(cardPanel, "menu"); // Show the main menu
-                BGM.playMainMenuBackgroundMusic(); // Play main menu background music
-            }
-        });
     }
 
     private void setFullscreen(boolean fullscreen) {

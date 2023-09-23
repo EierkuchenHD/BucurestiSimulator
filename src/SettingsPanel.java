@@ -8,79 +8,55 @@ import java.util.prefs.Preferences;
 
 public class SettingsPanel extends JPanel {
 
+    private static final int SLIDER_MIN = 0;
+    private static final int SLIDER_MAX = 100;
+    private static final int DEFAULT_VOLUME = 50;
+    private static final int SLIDER_WIDTH = 450;
+    private static final int SLIDER_HEIGHT = 70;
+    private static final Font LABEL_FONT = new Font("Consolas", Font.BOLD, 24);
+
     private JSlider bgmVolumeSlider;
     private JSlider sfxVolumeSlider;
-    private JButton backButton; // Added "Back" button
-    private JButton restoreDefaultsButton; // Added "Restore Default Settings" button
+    private JButton backButton;
+    private JButton restoreDefaultsButton;
     private Preferences preferences;
 
     public SettingsPanel() {
         setLayout(new GridBagLayout());
-
         preferences = Preferences.userNodeForPackage(SettingsPanel.class);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 20, 20, 20);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
-
-        Font labelFont = new Font("Consolas", Font.BOLD, 24);
+        gbc.anchor = GridBagConstraints.WEST;
 
         JLabel bgmVolumeLabel = createLabel("Background Music Volume:");
-        bgmVolumeLabel.setFont(labelFont);
-        bgmVolumeSlider = createSlider(0, 100, preferences.getInt("bgmVolume", 50));
+        bgmVolumeSlider = createSlider(preferences.getInt("bgmVolume", DEFAULT_VOLUME));
         bgmVolumeSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int volume = bgmVolumeSlider.getValue();
                 preferences.putInt("bgmVolume", volume);
-                BGM.setVolume(volume); // Update BGM volume immediately based on slider position
+                BGM.setVolume(volume);
             }
         });
 
         JLabel sfxVolumeLabel = createLabel("Sound Effects Volume:");
-        sfxVolumeLabel.setFont(labelFont);
-        sfxVolumeSlider = createSlider(0, 100, preferences.getInt("sfxVolume", 50));
+        sfxVolumeSlider = createSlider(preferences.getInt("sfxVolume", DEFAULT_VOLUME));
         sfxVolumeSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 int volume = sfxVolumeSlider.getValue();
                 preferences.putInt("sfxVolume", volume);
-                SFX.setVolume(volume); // Update SFX volume immediately based on slider position
+                SFX.setVolume(volume);
             }
         });
 
-        // Set the initial volume of BGM
-        BGM.setVolume(preferences.getInt("bgmVolume", 50));
+        BGM.setVolume(preferences.getInt("bgmVolume", DEFAULT_VOLUME));
 
-        // Added "Back" button
-        backButton = createButton("Back");
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Play button click sound
-                SFX.playButtonClickSound();
-
-                // Handle navigation to the previous panel
-                CardLayout cardLayout = (CardLayout) getParent().getLayout();
-                cardLayout.show(getParent(), "menu"); // Assuming "menu" is the name of the previous panel
-            }
-        });
-
-        // Added "Restore Default Settings" button
-        restoreDefaultsButton = createButton("Restore Default Settings");
-        restoreDefaultsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Reset sliders to default value (50)
-                bgmVolumeSlider.setValue(50);
-                sfxVolumeSlider.setValue(50);
-
-                // Play button click sound
-                SFX.playButtonClickSound();
-            }
-        });
+        backButton = createButton("Back", e -> navigateToMenu());
+        restoreDefaultsButton = createButton("Restore Default Settings", e -> resetSliders());
 
         add(bgmVolumeLabel, gbc);
         gbc.gridy++;
@@ -90,36 +66,49 @@ public class SettingsPanel extends JPanel {
         gbc.gridy++;
         add(sfxVolumeSlider, gbc);
         gbc.gridy++;
-        add(backButton, gbc); // "Back" button
+        add(backButton, gbc);
         gbc.gridy++;
-        add(restoreDefaultsButton, gbc); // "Restore Default Settings" button
+        add(restoreDefaultsButton, gbc);
     }
 
-    private JSlider createSlider(int min, int max, int value) {
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, value);
+    private JSlider createSlider(int value) {
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, SLIDER_MIN, SLIDER_MAX, value);
         slider.setMajorTickSpacing(10);
         slider.setMinorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
-        slider.setFont(new Font("Consolas", Font.BOLD, 24));
-        slider.setPreferredSize(new Dimension(450, 70));
+        slider.setFont(LABEL_FONT);
+        slider.setPreferredSize(new Dimension(SLIDER_WIDTH, SLIDER_HEIGHT));
         return slider;
     }
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font("Consolas", Font.BOLD, 24));
+        label.setFont(LABEL_FONT);
         return label;
     }
 
-    private JButton createButton(String text) {
+    private JButton createButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Consolas", Font.BOLD, 24));
+        button.setFont(LABEL_FONT);
+        button.addActionListener(actionListener);
         return button;
     }
 
+    private void navigateToMenu() {
+        SFX.playButtonClickSound();
+        CardLayout cardLayout = (CardLayout) getParent().getLayout();
+        cardLayout.show(getParent(), "menu");
+    }
+
+    private void resetSliders() {
+        bgmVolumeSlider.setValue(DEFAULT_VOLUME);
+        sfxVolumeSlider.setValue(DEFAULT_VOLUME);
+        SFX.playButtonClickSound();
+    }
+
     public void loadSettings() {
-        bgmVolumeSlider.setValue(preferences.getInt("bgmVolume", 50));
-        sfxVolumeSlider.setValue(preferences.getInt("sfxVolume", 50));
+        bgmVolumeSlider.setValue(preferences.getInt("bgmVolume", DEFAULT_VOLUME));
+        sfxVolumeSlider.setValue(preferences.getInt("sfxVolume", DEFAULT_VOLUME));
     }
 }
