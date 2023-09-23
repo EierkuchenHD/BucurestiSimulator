@@ -51,6 +51,9 @@ public class SettingsPanel extends JPanel {
             }
         });
 
+        // Set the initial volume of BGM
+        BGM.setVolume(preferences.getInt("bgmVolume", 50));
+
         // Added "Back" button
         backButton = createButton("Back");
         backButton.addActionListener(new ActionListener() {
