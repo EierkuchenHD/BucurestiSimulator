@@ -31,7 +31,7 @@ public class MainMenu extends JFrame {
         setSize(1280, 720);
 
         // Set a minimum resolution lock
-        setMinimumSize(new Dimension(854, 480));
+        setMinimumSize(new Dimension(600, 600));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -220,6 +220,7 @@ public class MainMenu extends JFrame {
         SFX.playButtonClickSound(); // Play button click sound
         switch (action) {
             case "play":
+                BGM.stop();
                 showPlayPanel();
                 break;
             case "settings":
