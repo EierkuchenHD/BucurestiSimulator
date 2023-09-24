@@ -22,11 +22,38 @@ public class BGM {
     }
 
     public static void playMainMenuBackgroundMusic() {
-        BGM.play("music/speaker_city.wav");
+        BGM.loop("music/speaker_city.wav");
     }
 
     public static void playPlayPanelMusic() {
         BGM.play("music/casa_dan_deal.wav");
+    }
+
+    // Loop the specified audio file continuously
+    private static void loop(String filename) {
+        try {
+            if (clipMap.containsKey(filename)) {
+                clip = clipMap.get(filename);
+                clip.setFramePosition(0);
+            } else {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clipMap.put(filename, clip);
+            }
+
+            clip = clipMap.get(filename);
+            clip.setFramePosition(0);
+
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
+
+            // Loop the clip continuously
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void play(String filename) {
@@ -90,5 +117,8 @@ public class BGM {
                 gainControl.setValue(dB);
             }
         }
+    }
+
+    public static void loopMainMenuBackgroundMusic() {
     }
 }
