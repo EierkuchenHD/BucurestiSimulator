@@ -1,28 +1,19 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JOptionPane;
-
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SFX {
-    private static Clip clip;
+    private static final float DEFAULT_VOLUME = 0.5f;
     private static Map<String, Clip> clipMap = new HashMap<>();
-    private static float volume = 0.5f; // Default volume
+    private static ExecutorService soundThreadPool = Executors.newFixedThreadPool(5);
+    private static float volume = DEFAULT_VOLUME;
 
     private SFX() {
-        // Display a more formal error message for creating an instance of SFX
-        JOptionPane.showMessageDialog(
-                null,
-                "Error: An instance of the SFX class was created, which should not occur.\nPlease use the static methods for audio operations.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        throw new AssertionError("SFX class should not be instantiated.");
     }
 
     public static void playButtonClickSound() {
@@ -33,43 +24,43 @@ public class SFX {
         play("sounds/secret.wav");
     }
 
-    // Play the sound effect from a file path
     private static void play(String filename) {
-        try {
-            if (clipMap.containsKey(filename)) {
+        soundThreadPool.submit(() -> {
+            try {
+                if (clipMap.containsKey(filename)) {
+                    Clip clip = clipMap.get(filename);
+                    clip.setFramePosition(0);
+                } else {
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInputStream);
+                    clipMap.put(filename, clip);
+                }
+
                 Clip clip = clipMap.get(filename);
                 clip.setFramePosition(0);
-            } else {
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clipMap.put(filename, clip);
+
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+                gainControl.setValue(dB);
+
+                clip.start();
+            } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+                e.printStackTrace();
             }
-
-            Clip clip = clipMap.get(filename);
-            clip.setFramePosition(0);
-
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            gainControl.setValue(dB);
-
-            clip.start();
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
-    // Stop the currently playing sound effect
     public static void stop() {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
-        }
+        soundThreadPool.shutdownNow();
+        soundThreadPool = Executors.newFixedThreadPool(5);
     }
 
-    // Set the volume of the currently playing sound effect (0.0f to 1.0f)
-    public static void setVolume(float volume) {
-        if (volume >= 0.0f && volume <= 1.0f) {
+    public static void setVolume(int percentage) {
+        if (percentage >= 0 && percentage <= 100) {
+            float volume = percentage / 100.0f; // Convert percentage to a float value between 0 and 1
             SFX.volume = volume;
+
             for (Clip clip : clipMap.values()) {
                 if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -80,8 +71,7 @@ public class SFX {
         }
     }
 
-    // Check if a sound effect is currently playing
     public static boolean isPlaying() {
-        return clip != null && clip.isRunning();
+        return !soundThreadPool.isShutdown();
     }
 }

@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
@@ -32,27 +30,23 @@ public class SettingsPanel extends JPanel {
 
         JLabel bgmVolumeLabel = createLabel("Background Music Volume:");
         bgmVolumeSlider = createSlider(preferences.getInt("bgmVolume", DEFAULT_VOLUME));
-        bgmVolumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int volume = bgmVolumeSlider.getValue();
-                preferences.putInt("bgmVolume", volume);
-                BGM.setVolume(volume);
-            }
+        bgmVolumeSlider.addChangeListener(e -> {
+            int volume = bgmVolumeSlider.getValue();
+            preferences.putInt("bgmVolume", volume);
+            updateBGMVolume(volume);
         });
 
         JLabel sfxVolumeLabel = createLabel("Sound Effects Volume:");
         sfxVolumeSlider = createSlider(preferences.getInt("sfxVolume", DEFAULT_VOLUME));
-        sfxVolumeSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int volume = sfxVolumeSlider.getValue();
-                preferences.putInt("sfxVolume", volume);
-                SFX.setVolume(volume);
-            }
+        sfxVolumeSlider.addChangeListener(e -> {
+            int volume = sfxVolumeSlider.getValue();
+            preferences.putInt("sfxVolume", volume);
+            updateSFXVolume(volume);
         });
 
-        BGM.setVolume(preferences.getInt("bgmVolume", DEFAULT_VOLUME));
+        // Update audio volumes when the panel is created
+        updateBGMVolume(bgmVolumeSlider.getValue());
+        updateSFXVolume(sfxVolumeSlider.getValue());
 
         backButton = createButton("Back", e -> navigateToMenu());
         restoreDefaultsButton = createButton("Restore Default Settings", e -> resetSliders());
@@ -104,6 +98,18 @@ public class SettingsPanel extends JPanel {
         bgmVolumeSlider.setValue(DEFAULT_VOLUME);
         sfxVolumeSlider.setValue(DEFAULT_VOLUME);
         SFX.playButtonClickSound();
+    }
+
+    private void updateBGMVolume(int volume) {
+        BGM.setVolume(volume);
+        // Update the slider value immediately
+        bgmVolumeSlider.setValue(volume);
+    }
+
+    private void updateSFXVolume(int volume) {
+        SFX.setVolume(volume);
+        // Update the slider value immediately
+        sfxVolumeSlider.setValue(volume);
     }
 
     public void loadSettings() {
