@@ -17,7 +17,7 @@ public class SFX {
     }
 
     public static void playButtonClickSound() {
-        play("sounds/preview.wav");
+        play("sounds/button.wav");
     }
 
     public static void playSecretSound() {
