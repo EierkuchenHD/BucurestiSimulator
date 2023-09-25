@@ -64,10 +64,3 @@ class EntityPanel extends JPanel {
         }
     }
 }
-
-class SFX {
-    public static void playSecretSound() {
-        // Implement your sound playback logic here
-        // For simplicity, we'll leave it empty in this example
-    }
-}
