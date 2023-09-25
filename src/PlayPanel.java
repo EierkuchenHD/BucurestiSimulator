@@ -2,12 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class PlayPanel extends JPanel {
     private JLabel timeLeftLabel;
     private JLabel robberiesLabel;
     private JLabel countdownLabel;
     private int countdownSeconds = 10; // Initial countdown time in seconds
+    private Timer countdownTimer;
 
     public PlayPanel() {
         setLayout(new BorderLayout());
@@ -47,7 +49,7 @@ public class PlayPanel extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
         // Create a timer to update the countdown
-        Timer countdownTimer = new Timer(1000, new ActionListener() {
+        countdownTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 countdownSeconds--;
@@ -56,6 +58,9 @@ public class PlayPanel extends JPanel {
                     countdownLabel.setText("Get ready in " + countdownSeconds + " seconds");
                 } else if (countdownSeconds == 0) {
                     countdownLabel.setText("GO!!!");
+
+                    // Start a timer to spawn Basic Dariuses after the countdown
+                    EntityCreation.createEntityPanel(PlayPanel.this);
                 } else {
                     // Timer reached a negative value (countdown finished)
                     ((Timer) e.getSource()).stop(); // Stop the timer
