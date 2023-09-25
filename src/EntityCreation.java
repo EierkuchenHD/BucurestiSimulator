@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
+import java.util.Random; // Import the Random class
 
 public class EntityCreation {
     public static void createEntityPanel(JPanel parentPanel) {
@@ -15,6 +15,9 @@ class EntityPanel extends JPanel {
     private int x, y;
     private boolean entityVisible = true;
     private Timer timer;
+
+    // Create a Random instance
+    private static final Random random = new Random();
 
     public EntityPanel() {
         entityIcon = new ImageIcon("images/basicdarius.png");
@@ -43,8 +46,8 @@ class EntityPanel extends JPanel {
     }
 
     private void generateRandomCoordinates() {
-        x = new Random().nextInt(getWidth() - 140) + 20;
-        y = new Random().nextInt(getHeight() - 140) + 20;
+        x = random.nextInt(getWidth() - 140) + 20;
+        y = random.nextInt(getHeight() - 140) + 20;
     }
 
     private boolean isClickInsideEntity(int clickX, int clickY) {
