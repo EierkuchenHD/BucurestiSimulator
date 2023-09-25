@@ -2,14 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class EntityTest {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Entity Test");
+            JFrame frame = new JFrame("Bucuresti Simulator | Entity Test");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600); // Set your desired frame size
+            frame.setSize(1280, 720); // Set your desired frame size
+            frame.setMinimumSize(new Dimension(600, 600));
             frame.add(new EntityPanel());
             frame.setLocationRelativeTo(null); // Center the JFrame to the screen
             frame.setVisible(true);
@@ -17,37 +20,50 @@ public class EntityTest {
     }
 
     static class EntityPanel extends JPanel {
-        private ImageIcon imageIcon;
+        private ImageIcon entityIcon;
         private int x, y;
+        private boolean entityVisible = true;
         private Timer timer;
 
         public EntityPanel() {
-            imageIcon = new ImageIcon("images/basicdarius.png"); // Make sure the image is in the same directory as your
-                                                                 // Java file
-
-            // Set the preferred size of the panel
-            setPreferredSize(new Dimension(800, 600)); // Adjust the size as needed
+            entityIcon = new ImageIcon("images/basicdarius.png");
 
             // Initialize the timer
-            timer = new Timer(1000, new ActionListener() {
+            timer = new Timer(2000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Move the image to a new random position
-                    x = new Random().nextInt(getWidth() - 100);
-                    y = new Random().nextInt(getHeight() - 100);
-                    repaint(); // Repaint the panel to show the updated image position
+                    if (entityVisible) {
+                        SFX.playSecretSound();
+                        x = new Random().nextInt(getWidth() - 100);
+                        y = new Random().nextInt(getHeight() - 100);
+                    }
+                    repaint(); // Repaint the panel to show the updated entity position
                 }
             });
             timer.setRepeats(true);
             timer.start();
+
+            // Add a mouse listener to handle click events
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (entityVisible && e.getX() >= x && e.getX() <= x + 100 && e.getY() >= y && e.getY() <= y + 100) {
+                        // If the click is within the entity's boundaries, make the entity disappear
+                        entityVisible = false;
+                        repaint();
+                    }
+                }
+            });
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            // Draw the image at the current coordinates (x, y) with a size of 100x100
-            g.drawImage(imageIcon.getImage(), x, y, 100, 100, this);
+            if (entityVisible) {
+                // Draw the image at the current coordinates (x, y) with a size of 100x100
+                g.drawImage(entityIcon.getImage(), x, y, 100, 100, this);
+            }
         }
     }
 }

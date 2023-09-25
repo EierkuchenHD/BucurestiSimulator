@@ -20,6 +20,10 @@ public class SFX {
         play("sounds/preview.wav");
     }
 
+    public static void playCoinSound() {
+        play("sounds/coinsound.wav");
+    }
+
     public static void playSecretSound() {
         play("sounds/secret.wav");
     }
