@@ -29,13 +29,14 @@ public class EntityTest {
             entityIcon = new ImageIcon("images/basicdarius.png");
 
             // Initialize the timer
-            timer = new Timer(2000, new ActionListener() {
+            timer = new Timer(1000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (entityVisible) {
                         SFX.playSecretSound();
-                        x = new Random().nextInt(getWidth() - 100);
-                        y = new Random().nextInt(getHeight() - 100);
+                        // Generate random coordinates at least 20 pixels away from the panel borders
+                        x = new Random().nextInt(getWidth() - 140) + 20;
+                        y = new Random().nextInt(getHeight() - 140) + 20;
                     }
                     repaint(); // Repaint the panel to show the updated entity position
                 }
@@ -59,6 +60,13 @@ public class EntityTest {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
+            // Generate random initial coordinates only once when painting for the first
+            // time
+            if (x == 0 && y == 0) {
+                x = new Random().nextInt(getWidth() - 140) + 20;
+                y = new Random().nextInt(getHeight() - 140) + 20;
+            }
 
             if (entityVisible) {
                 // Draw the image at the current coordinates (x, y) with a size of 100x100
