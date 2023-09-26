@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 
 public class PlayPanel extends JPanel {
     private JLabel timeLeftLabel;
-    private JLabel robberiesLabel;
+    private static JLabel robberiesLabel;
     private JLabel countdownLabel;
     private int countdownSeconds = 10; // Initial countdown time in seconds
+    private static int robberiesCount = 0; // Counter for robberies
     private Timer countdownTimer;
 
     public PlayPanel() {
@@ -23,7 +24,7 @@ public class PlayPanel extends JPanel {
         timeLeftLabel = new JLabel("Time Left: 0s");
         timeLeftLabel.setFont(new Font("Consolas", Font.BOLD, 24));
 
-        robberiesLabel = new JLabel("Robberies: 0");
+        robberiesLabel = new JLabel("Robberies: " + robberiesCount); // Initialize the label with 0 robberies
         robberiesLabel.setFont(new Font("Consolas", Font.BOLD, 24));
     }
 
@@ -75,5 +76,11 @@ public class PlayPanel extends JPanel {
 
     private void spawnEntity() {
         EntityCreation.createEntityPanel(PlayPanel.this);
+    }
+
+    // Method to increment the robberies count
+    public static void incrementRobberiesCount() {
+        robberiesCount++;
+        robberiesLabel.setText("Robberies: " + robberiesCount);
     }
 }
