@@ -16,6 +16,10 @@ public class SFX {
         throw new AssertionError("SFX class should not be instantiated.");
     }
 
+    public static void playDeathSound() {
+        play("sounds/deathsound.wav");
+    }
+
     public static void playButtonClickSound() {
         play("sounds/button.wav");
     }

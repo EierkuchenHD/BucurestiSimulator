@@ -34,6 +34,7 @@ class EntityPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (entityVisible && isClickInsideEntity(e.getX(), e.getY())) {
+                    SFX.playDeathSound();
                     entityVisible = false;
                     repaint();
                     PlayPanel.incrementRobberiesCount();
@@ -42,11 +43,11 @@ class EntityPanel extends JPanel {
         });
     }
 
-    private Timer timer = new Timer(1000, e -> {
+    private Timer timer = new Timer(800, e -> {
         if (entityVisible) {
-            SFX.playSecretSound(); // Play a sound when the entity is visible
             generateRandomCoordinates();
             repaint(); // Repaint the panel to show the updated entity position
+            SFX.playSecretSound(); // Play a sound when the entity is visible
         }
     });
 
