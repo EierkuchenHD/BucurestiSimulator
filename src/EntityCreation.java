@@ -13,7 +13,7 @@ public class EntityCreation {
 class EntityPanel extends JPanel {
     private ImageIcon entityIcon; // Stores the entity image icon
     private int x, y;
-    private boolean entityVisible = true;
+    private boolean entityVisible = false;
     private static final Random random = new Random();
 
     public EntityPanel() {
@@ -44,11 +44,10 @@ class EntityPanel extends JPanel {
     }
 
     private Timer timer = new Timer(800, e -> {
-        if (entityVisible) {
-            generateRandomCoordinates();
-            repaint(); // Repaint the panel to show the updated entity position
-            SFX.playSecretSound(); // Play a sound when the entity is visible
-        }
+        generateRandomCoordinates();
+        entityVisible = true;
+        repaint();
+        SFX.playSecretSound(); // Play a sound when the entity is visible
     });
 
     private void generateRandomCoordinates() {
@@ -68,9 +67,6 @@ class EntityPanel extends JPanel {
         super.paintComponent(g);
 
         if (entityVisible && entityIcon != null) {
-            if (x == 0 && y == 0) {
-                generateRandomCoordinates();
-            }
             // Draw the entity image at the current coordinates (x, y) with a size of
             // 100x100
             g.drawImage(entityIcon.getImage(), x, y, 100, 100, this);
