@@ -26,9 +26,6 @@ class EntityPanel extends JPanel {
             entityIcon = null; // Set to null to avoid potential NPE
         }
 
-        // Initialize the timer for entity animation
-        timer.start();
-
         // Add a mouse listener to handle entity clicks
         addMouseListener(new MouseAdapter() {
             @Override
@@ -41,9 +38,12 @@ class EntityPanel extends JPanel {
                 }
             }
         });
+
+        // Initialize the timer for entity animation
+        timer.start();
     }
 
-    private Timer timer = new Timer(800, e -> {
+    private Timer timer = new Timer(1000, e -> {
         generateRandomCoordinates();
         entityVisible = true;
         repaint();
